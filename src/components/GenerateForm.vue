@@ -31,7 +31,7 @@
         </template>
 
         <template v-else>
-          <genetate-form-item :key="item.key" :models.sync="models" :rules="rules" :widget="item" :remote="remote"></genetate-form-item>
+          <genetate-form-item :key="item.key" :models.sync="models" :data="data" :rules="rules" :widget="item" :remote="remote"></genetate-form-item>
         </template>
         
       </template>

@@ -34,7 +34,7 @@
                       <widget-form-item 
                         v-for="(el, i) in col.list"
                         :key="el.key"
-                        v-if="el.key"
+                        :v-if="el.key"
                         :element="el" 
                         :select.sync="selectWidget" 
                         :index="i" 
@@ -103,7 +103,7 @@ export default {
         rules: []
       })
 
-      if (this.data.list[newIndex].type === 'radio' || this.data.list[newIndex].type === 'checkbox') {
+      if (this.data.list[newIndex].type === 'radio' || this.data.list[newIndex].type === 'checkbox' || this.data.list[newIndex].type === 'table') {
         this.$set(this.data.list, newIndex, {
           ...this.data.list[newIndex],
           options: {
@@ -157,7 +157,7 @@ export default {
         rules: []
       })
 
-      if (row.columns[colIndex].list[newIndex].type === 'radio' || row.columns[colIndex].list[newIndex].type === 'checkbox') {
+      if (row.columns[colIndex].list[newIndex].type === 'radio' || row.columns[colIndex].list[newIndex].type === 'checkbox' || row.columns[colIndex].list[newIndex].type === 'table') {
         this.$set(row.columns[colIndex].list, newIndex, {
           ...row.columns[colIndex].list[newIndex],
           options: {

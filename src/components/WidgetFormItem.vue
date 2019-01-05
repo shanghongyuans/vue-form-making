@@ -158,6 +158,19 @@
           <div style="height: 50px;color: #999;background: #eee;line-height:50px;text-align:center;">自定义区域</div>
         </template>
 
+        <template v-if="element.type=='table'">
+          <el-button v-if="data.config.labelPosition=='top'" type="primary" plain size="mini" style="position: relative; float: right; margin-top: -38px;">添加数据</el-button>
+          <el-button v-if="data.config.labelPosition=='left'||data.config.labelPosition=='right'" plain type="primary" size="mini" style="position: relative; float: right; margin-top: 4px; margin-bottom: 5px;">添加数据</el-button>
+          <el-table v-model="element.options.defaultValue" :style="{width: element.options.width}" border>
+            <el-table-column
+              v-for="(item, index) in element.options.options"
+              :key="index"
+              :label="item.name"
+              :min-width="item.width">
+            </el-table-column>
+          </el-table>
+        </template>
+
         <el-button title="删除" @click.stop="handleWidgetDelete(index)" class="widget-action-delete" v-if="selectWidget.key == element.key" circle plain type="danger">
           <icon name="regular/trash-alt" style="width: 12px;height: 12px;"></icon>
         </el-button>
@@ -206,7 +219,7 @@ export default {
         key: Date.parse(new Date()) + '_' + Math.ceil(Math.random() * 99999)
       }
 
-      if (this.data.list[index].type === 'radio' || this.data.list[index].type === 'checkbox') {
+      if (this.data.list[index].type === 'radio' || this.data.list[index].type === 'checkbox' || this.data.list[index].type === 'table') {
 
         cloneData = {
           ...cloneData,

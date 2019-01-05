@@ -235,6 +235,39 @@ export const advanceComponents = [
     }
   },
   {
+    type: 'table',
+    name: '表格',
+    icon: 'table',
+    options: {
+      inline: false,
+      defaultValue: [],
+      showLabel: true,
+      options: [
+        {
+          name: '',
+          width: ''
+        },
+        {
+          name: '',
+          width: ''
+        },
+        {
+          name: '',
+          width: ''
+        }
+      ],
+      required: false,
+      width: '',
+      remote: false,
+      remoteOptions: [],
+      props: {
+        value: 'value',
+        label: 'label'
+      },
+      remoteFunc: ''
+    }
+  },
+  {
     type: 'imgupload',
     name: '图片',
     icon: 'regular/image',

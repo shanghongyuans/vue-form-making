@@ -4,7 +4,7 @@
       <el-form-item label="标题" v-if="data.type!='grid'">
         <el-input v-model="data.name"></el-input>
       </el-form-item>
-      <el-form-item label="宽度" v-if="Object.keys(data.options).indexOf('width')>=0">
+      <el-form-item label="宽度" v-if="Object.keys(data.options).indexOf('width')>=0&&data.type!='table'">
         <el-input v-model="data.options.width"></el-input>
       </el-form-item>
 
@@ -16,7 +16,7 @@
       <el-form-item label="占位内容" v-if="Object.keys(data.options).indexOf('placeholder')>=0 && (data.type!='time' || data.type!='date')">
         <el-input v-model="data.options.placeholder"></el-input>
       </el-form-item>
-      <el-form-item label="布局方式" v-if="Object.keys(data.options).indexOf('inline')>=0">
+      <el-form-item label="布局方式" v-if="Object.keys(data.options).indexOf('inline')>=0 && data.type !== 'table'">
         <el-radio-group v-model="data.options.inline">
           <el-radio-button :label="false">块级</el-radio-button>
           <el-radio-button :label="true">行内</el-radio-button>
@@ -49,14 +49,14 @@
           >
           </el-switch>
       </el-form-item>
-      <el-form-item label="是否显示标签" v-if="Object.keys(data.options).indexOf('showLabel')>=0">
+      <el-form-item label="是否显示标签" v-if="Object.keys(data.options).indexOf('showLabel')>=0&&data.type!=='table'">
         <el-switch
             v-model="data.options.showLabel"
           >
         </el-switch>
       </el-form-item>
       <el-form-item label="选项" v-if="Object.keys(data.options).indexOf('options')>=0">
-        <el-radio-group v-model="data.options.remote" size="mini" style="margin-bottom:10px;">
+        <el-radio-group v-if="data.type!=='table'" v-model="data.options.remote" size="mini" style="margin-bottom:10px;">
           <el-radio-button :label="false">静态数据</el-radio-button>
           <el-radio-button :label="true">远端数据</el-radio-button>
         </el-radio-group>
@@ -117,6 +117,21 @@
                 </li>
               </draggable>
             </el-checkbox-group>
+          </template>
+
+          <template v-if="data.type=='table'">
+            <el-radio-group v-model="data.options.defaultValue">
+              <draggable element="ul" :list="data.options.options" 
+                :options="{group:{ name:'options'}, ghostClass: 'ghost',handle: '.drag-item'}"
+              >
+                <li v-for="(item, index) in data.options.options" :key="index" style="margin-bottom: 4px;">
+                  <el-input style="width:120px" placeholder="列名" size="mini" v-model="item.name"></el-input>
+                  <el-input style="width:100px;margin-left:5px;" size="mini" v-if="data.options.showLabel" placeholder="宽度百分比" v-model="item.width"></el-input>
+                  <i class="drag-item" style="font-size: 18px;margin: 0 5px;cursor: move;"><icon name="bars" ></icon></i>
+                  <el-button @click="handleOptionsRemove(index)" circle plain type="danger" size="mini" icon="el-icon-minus" style="padding: 4px;margin-left: 5px;"></el-button>
+                </li>
+              </draggable>
+            </el-radio-group>
           </template>
           <div style="margin-left: 22px;">
             <el-button type="text" @click="handleAddOption">添加选项</el-button>
@@ -332,17 +347,23 @@ export default {
       
     },
     handleAddOption () {
-      if (this.data.options.showLabel) {
+      if (this.data.type === 'table') {
         this.data.options.options.push({
-          value: '新选项',
-          label: '新选项'
+          name: '',
+          width: ''
         })
       } else {
-        this.data.options.options.push({
-          value: '新选项'
-        })
+        if (this.data.options.showLabel) {
+          this.data.options.options.push({
+            value: '新选项',
+            label: '新选项'
+          })
+        } else {
+          this.data.options.options.push({
+            value: '新选项'
+          })
+        }
       }
-      
     },
     handleAddColumn () {
       this.data.columns.push({

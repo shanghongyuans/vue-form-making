@@ -161,6 +161,37 @@
       >
       </fm-upload>
     </template>
+
+    <template v-if="widget.type=='table'">
+      <el-row>
+        <el-col :span='24'>
+          <el-button v-if="data.config.labelPosition=='top'" type="primary" plain size="mini" style="position: relative; float: right; margin-top: -38px;" @click="addTableCol">添加数据</el-button>
+          <el-button v-if="data.config.labelPosition=='left'||data.config.labelPosition=='right'" plain type="primary" size="mini" style="position: relative; float: right; margin-top: 4px; margin-bottom: 5px;" @click="addTableCol(widget.key)">添加数据</el-button>
+          <el-table v-model="widget.options.defaultValue" :style="{width: widget.options.width}" border>
+            <el-table-column
+              v-for="(item, index) in widget.options.options"
+              :key="index"
+              :label="item.name"
+              :min-width="item.width"
+              border>
+            </el-table-column>
+          </el-table>
+          <table>
+            <tr>
+              <td 
+                v-for="(item, index) in widget.options.options"
+                :key="index" 
+                :min-width="item.width">
+                <el-input v-model="tableValues[index]" :placeholder="item.name"/>
+              </td>
+              <td>
+                <el-button type="success" size="mini" @click="saveTableData">保存</el-button>
+              </td>
+            </tr>
+          </table>
+        </el-col>
+      </el-row>
+    </template>
   </el-form-item>
 </template>
 
@@ -168,13 +199,16 @@
 import FmUpload from './Upload'
 
 export default {
-  props: ['widget', 'models', 'rules', 'remote'],
+  props: ['widget', 'data', 'models', 'rules', 'remote'],
   components: {
     FmUpload
   },
   data () {
     return {
-      dataModel: this.models[this.widget.model]
+      dataModel: this.models[this.widget.model],
+      tableValues: [],
+      tableObjects: {},
+      count: 0
     }
   },
   created () {
@@ -212,6 +246,24 @@ export default {
         console.log('--------')
         this.dataModel = val[this.widget.model]
       }
+    }
+  },
+  methods: {
+    addTableCol(key) {
+      
+    },
+    saveTableData() {
+      const arraydata = []
+      for (let i = 0; i < this.tableValues.length; i++) {
+        arraydata[i] = this.tableValues[i]
+      }
+      this.tableObjects[this.count] = arraydata
+      this.count++
+      const tables = this.tableObjects
+      const resultdata = []
+      resultdata[this.widget.model+''] = tables
+      this.dataModel = resultdata
+      console.info(this.dataModel.toString())
     }
   }
 }
